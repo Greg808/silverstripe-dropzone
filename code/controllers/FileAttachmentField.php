@@ -1,5 +1,25 @@
 <?php
 
+namespace Dropzone\Controllers;
+
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FileField;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\RelationList;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\UnsavedRelationList;
+use SilverStripe\View\Requirements;
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 /**
  * Defines the FileAttachementField form field type
  *
@@ -230,7 +250,7 @@ class FileAttachmentField extends FileField {
 
         if ($this->getTrackFiles()) {
             $fileIDs = (array)$this->Value();
-            FileAttachmentFieldTrack::untrack($fileIDs);
+            FileAttachmentField::untrack($fileIDs);
         }
 
         return $this;
@@ -365,14 +385,14 @@ class FileAttachmentField extends FileField {
      * @return void
      */
     public function addValidFileIDs(array $ids) {
-        $validIDs = Session::get('FileAttachmentField.validFileIDs');
+        $validIDs = Controller::curr()->getRequest()->getSession()->get('FileAttachmentField.validFileIDs');
         if (!$validIDs) {
             $validIDs = array();
         }
         foreach ($ids as $id) {
             $validIDs[$id] = $id;
         }
-        Session::set('FileAttachmentField.validFileIDs', $validIDs);
+        Controller::curr()->getRequest()->getSession()->set('FileAttachmentField.validFileIDs', $validIDs);
     }
 
     /**
@@ -382,7 +402,7 @@ class FileAttachmentField extends FileField {
      * @return array
      */
     public function getValidFileIDs() {
-        $validIDs = Session::get('FileAttachmentField.validFileIDs');
+        $validIDs = Controller::curr()->getRequest()->getSession()->get('FileAttachmentField.validFileIDs');
         if ($validIDs && is_array($validIDs)) {
             return $validIDs;
         }
@@ -772,7 +792,7 @@ class FileAttachmentField extends FileField {
      * @return SS_HTTPResponse
      * @return SS_HTTPResponse
      */
-    public function upload(SS_HTTPRequest $request) {
+    public function upload($request) {
       
         $name = $this->getSetting('paramName');
         $files = (!empty($_FILES[$name]) ? $_FILES[$name] : array());
@@ -842,7 +862,7 @@ class FileAttachmentField extends FileField {
                 $controller = Controller::has_curr() ? Controller::curr() : null;
                 $formClass = ($form) ? get_class($form) : '';
 
-                $trackFile = FileAttachmentFieldTrack::create();
+                $trackFile = \FileAttachmentFieldTrack::create();
                 if ($controller instanceof LeftAndMain) {
                     // If in CMS (store DataObject or Page)
                     $formController = $form->getController();
@@ -1283,76 +1303,76 @@ class FileAttachmentField extends FileField {
     }
 }
 
-class FileAttachmentField_SelectHandler extends UploadField_SelectHandler {
-
-    private static $allowed_actions = array (
-        'filesbyid',
-    );
-
-    /**
-     * @param $folderID The ID of the folder to display.
-     * @return FormField
-     */
-    protected function getListField($folderID) {
-        // Generate the folder selection field.
-        $folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
-        $folderField->setValue($folderID);
-
-        // Generate the file list field.
-        $config = GridFieldConfig::create();
-        $config->addComponent(new GridFieldSortableHeader());
-        $config->addComponent(new GridFieldFilterHeader());
-        $config->addComponent($columns = new GridFieldDataColumns());
-        $columns->setDisplayFields(array(
-            'StripThumbnail' => '',
-            'Name' => 'Name',
-            'Title' => 'Title'
-        ));
-        $config->addComponent(new GridFieldPaginator(8));
-
-        // If relation is to be autoset, we need to make sure we only list compatible objects.
-        $baseClass = $this->parent->getFileClass();
-
-        // Create the data source for the list of files within the current directory.
-        $files = DataList::create($baseClass)->filter('ParentID', $folderID);
-
-        $fileField = new GridField('Files', false, $files, $config);
-        $fileField->setAttribute('data-selectable', true);
-        if($this->parent->IsMultiple()) {
-            $fileField->setAttribute('data-multiselect', true);
-        }
-
-        $selectComposite = new CompositeField(
-            $folderField,
-            $fileField
-        );
-
-        return $selectComposite;
-    }
-
-
-    public function filesbyid(SS_HTTPRequest $r) {
-        $ids = $r->getVar('ids');
-        $files = File::get()->byIDs(explode(',',$ids));
-
-        $validIDs = array();
-        $json = array ();
-        foreach($files as $file) {
-            $template = new SSViewer('FileAttachmentField_attachments');
-            $html = $template->process(ArrayData::create(array(
-                'File' => $file,
-                'Scope' => $this->parent
-            )));
-
-            $validIDs[$file->ID] = $file->ID;
-            $json[] = array (
-                'id' => $file->ID,
-                'html' => $html->forTemplate()
-            );
-        }
-
-        $this->parent->addValidFileIDs($validIDs);
-        return Convert::array2json($json);
-    }
-
-}
+//class FileAttachmentField_SelectHandler extends UploadField_SelectHandler {
+//
+//    private static $allowed_actions = array (
+//        'filesbyid',
+//    );
+//
+//    /**
+//     * @param $folderID The ID of the folder to display.
+//     * @return FormField
+//     */
+//    protected function getListField($folderID) {
+//        // Generate the folder selection field.
+//        $folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
+//        $folderField->setValue($folderID);
+//
+//        // Generate the file list field.
+//        $config = GridFieldConfig::create();
+//        $config->addComponent(new GridFieldSortableHeader());
+//        $config->addComponent(new GridFieldFilterHeader());
+//        $config->addComponent($columns = new GridFieldDataColumns());
+//        $columns->setDisplayFields(array(
+//            'StripThumbnail' => '',
+//            'Name' => 'Name',
+//            'Title' => 'Title'
+//        ));
+//        $config->addComponent(new GridFieldPaginator(8));
+//
+//        // If relation is to be autoset, we need to make sure we only list compatible objects.
+//        $baseClass = $this->parent->getFileClass();
+//
+//        // Create the data source for the list of files within the current directory.
+//        $files = DataList::create($baseClass)->filter('ParentID', $folderID);
+//
+//        $fileField = new GridField('Files', false, $files, $config);
+//        $fileField->setAttribute('data-selectable', true);
+//        if($this->parent->IsMultiple()) {
+//            $fileField->setAttribute('data-multiselect', true);
+//        }
+//
+//        $selectComposite = new CompositeField(
+//            $folderField,
+//            $fileField
+//        );
+//
+//        return $selectComposite;
+//    }
+//
+//
+//    public function filesbyid(SS_HTTPRequest $r) {
+//        $ids = $r->getVar('ids');
+//        $files = File::get()->byIDs(explode(',',$ids));
+//
+//        $validIDs = array();
+//        $json = array ();
+//        foreach($files as $file) {
+//            $template = new SSViewer('FileAttachmentField_attachments');
+//            $html = $template->process(ArrayData::create(array(
+//                'File' => $file,
+//                'Scope' => $this->parent
+//            )));
+//
+//            $validIDs[$file->ID] = $file->ID;
+//            $json[] = array (
+//                'id' => $file->ID,
+//                'html' => $html->forTemplate()
+//            );
+//        }
+//
+//        $this->parent->addValidFileIDs($validIDs);
+//        return Convert::array2json($json);
+//    }
+//
+//}

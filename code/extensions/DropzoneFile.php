@@ -1,4 +1,11 @@
 <?php
+namespace Dropzone\Extensions;
+
+use League\Flysystem\Config;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Image;
+use SilverStripe\Control\Director;
+use SilverStripe\ORM\DataExtension;
 
 /**
  * Adds helper methods to the core {@link File} object
