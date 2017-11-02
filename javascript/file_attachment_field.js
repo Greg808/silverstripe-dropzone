@@ -1,6 +1,7 @@
 (function () {
 
 
+
 /**
  * A wrapper for the Dropzone object that handles UI specifics for
  * its implementation in this module.
