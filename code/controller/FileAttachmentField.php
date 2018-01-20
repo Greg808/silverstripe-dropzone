@@ -5,6 +5,7 @@ namespace Dropzone\Controller;
 use PhpParser\Node\Expr\Cast\Object_;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
