@@ -4,7 +4,6 @@
                         <img src="$DropzoneDir/images/remove.png" width="16">
                     </span>
                 </span>
-
                 <span class="file-icon" style="width:{$SelectedThumbnailWidth}px;height:{$SelectedThumbnailHeight}px;">
                     <img data-dz-thumbnail width="$SelectedThumbnailWidth">
                 </span>

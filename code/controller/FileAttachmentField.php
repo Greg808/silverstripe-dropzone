@@ -117,7 +117,7 @@ class FileAttachmentField extends FileField
 ////     *
 ////     * @var string
 ////     */
-//        protected $template = 'Dropzone\templates\dropzone\controller\Includes\FileAttachmentField_attachments.ss';
+        protected $template = 'dropzone/templates/Dropzone/IncLudes/FileAttachmentField_attachments.ss';
 ////
 ////    /**
 ////     * The preview template for uploaded files. Does not necessarily apply
@@ -125,9 +125,11 @@ class FileAttachmentField extends FileField
 ////     * that have been attached to the uploader client side
 ////     * @var string
 ////     */
-    protected $previewTemplate = 'Dropzone/Controller/Includes/FileAttachmentField_preview.ss';
+        protected $previewTemplate = 'dropzone/templates/Dropzone/IncLudes/FileAttachmentField_preview.ss';
+
+        //protected $fieldHolderTemplate = 'templates/Dropzone/Controller/FileAttachmentField_holder.ss';
 ////
-////
+////    
 ////    /**
 ////     * Name of the template used to render this form field. If not set, then will look up the class
 ////     * ancestry for the first matching template where the template name equals the class name.
@@ -136,8 +138,8 @@ class FileAttachmentField extends FileField
 ////     * {@link setFieldHolderTemplate()}.
 ////     *
 ////     * @var string
-////     */
-//        protected $fieldHolderTemplate = 'Dropzone\templates\dropzone\controller\Layout\FileAttachmentField_holder.ss';
+////     */ 
+          //protected $fieldHolderTemplate = 'templates/FileAttachmentField_holder.ss';
 ////
 ////    /**
 ////     * @var string
@@ -223,11 +225,15 @@ class FileAttachmentField extends FileField
         $this->permissions['attach'] = function () use ($instance) {
             return $instance->isCMS();
         };
+        //$foo = SSViewer::get_templates_by_class(static::class, '_preview', FileAttachmentField::class);
 
-        $this->setTemplate('Dropzone/Controller/Includes/FileAttachmentField_attachments.ss');
+        //$this->setPreviewTemplate ('Dropzone\templates\dropzone\controller\Layout\FileAttachmentField_holder.ss');
+        // $this->setTemplate = SSViewer::get_templates_by_class(static::class, '_attachments', FormField::class);
 
-        $this->previewTemplate = SSViewer::get_templates_by_class(static::class, '_preview', FormField::class);
+        // $this->previewTemplate = SSViewer::get_templates_by_class(static::class, '_preview', FormField::class);
 
+        // $this->setFieldHolderTemplate = SSViewer::get_templates_by_class(static::class, '_holder', FormField::class);
+       
         parent::__construct($name, $title, $value, $form);
     }
 
@@ -911,7 +917,9 @@ class FileAttachmentField extends FileField
     public function upload($request)
     {
 
+
         $name = $this->getSetting('paramName');
+        
         $files = (!empty($_FILES[$name]) ? $_FILES[$name] : []);
         $tmpFiles = [];
 
