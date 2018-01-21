@@ -118,7 +118,7 @@ class FileAttachmentField extends FileField
 ////     *
 ////     * @var string
 ////     */
-        protected $template = 'dropzone/templates/Dropzone/IncLudes/FileAttachmentField_attachments.ss';
+        protected $template = 'dropzone/templates/Includes/FileAttachmentField_attachments.ss';
 ////
 ////    /**
 ////     * The preview template for uploaded files. Does not necessarily apply
@@ -126,7 +126,7 @@ class FileAttachmentField extends FileField
 ////     * that have been attached to the uploader client side
 ////     * @var string
 ////     */
-        protected $previewTemplate = 'dropzone/templates/Dropzone/IncLudes/FileAttachmentField_preview.ss';
+         protected $previewTemplate = 'dropzone/templates/Includes/FileAttachmentField_preview.ss';
 
         //protected $fieldHolderTemplate = 'templates/Dropzone/Controller/FileAttachmentField_holder.ss';
 ////
@@ -217,12 +217,11 @@ class FileAttachmentField extends FileField
     public function __construct($name, $title = null, $value = null, $form = null)
     {
         $instance = $this;
-
         $this->permissions['upload'] = true;
         $this->permissions['detach'] = true;
-        $this->permissions['delete'] = function () use ($instance) {
-            return Injector::inst()->get('File')->canDelete() && $instance->isCMS();
-        };
+        // $this->permissions['delete'] = function () use ($instance) {
+        //     return Injector::inst()->get('File')->canDelete() && $instance->isCMS();
+        // };
         $this->permissions['attach'] = function () use ($instance) {
             return $instance->isCMS();
         };
