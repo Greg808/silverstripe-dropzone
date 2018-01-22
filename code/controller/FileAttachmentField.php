@@ -2,6 +2,7 @@
 
 namespace Dropzone\Controller;
 
+use Dropzone\Models\FileAttachmentFieldTrack;
 use PhpParser\Node\Expr\Cast\Object_;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Assets\File;
@@ -990,7 +991,7 @@ class FileAttachmentField extends FileField
                 $controller = Controller::has_curr() ? Controller::curr() : null;
                 $formClass = ($form) ? get_class($form) : '';
 
-                $trackFile = \FileAttachmentFieldTrack::create();
+                $trackFile = FileAttachmentFieldTrack::create();
                 if ($controller instanceof LeftAndMain) {
                     // If in CMS (store DataObject or Page)
                     $formController = $form->getController();
@@ -1008,6 +1009,7 @@ class FileAttachmentField extends FileField
                 }
                 $trackFile->FileID = $fileObject->ID;
                 $trackFile->write();
+                $trackFile->doPublish();
             }
         }
 
