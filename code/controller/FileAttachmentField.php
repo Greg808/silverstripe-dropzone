@@ -234,7 +234,7 @@ class FileAttachmentField extends FileField
         // $this->previewTemplate = SSViewer::get_templates_by_class(static::class, '_preview', FormField::class);
 
         // $this->setFieldHolderTemplate = SSViewer::get_templates_by_class(static::class, '_holder', FormField::class);
-       
+
         parent::__construct($name, $title, $value, $form);
     }
 
@@ -920,7 +920,7 @@ class FileAttachmentField extends FileField
 
 
         $name = $this->getSetting('paramName');
-        
+
         $files = (!empty($_FILES[$name]) ? $_FILES[$name] : []);
         $tmpFiles = [];
 
@@ -1009,7 +1009,7 @@ class FileAttachmentField extends FileField
                 }
                 $trackFile->FileID = $fileObject->ID;
                 $trackFile->write();
-                $trackFile->doPublish();
+
             }
         }
 
