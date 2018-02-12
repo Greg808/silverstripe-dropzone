@@ -979,6 +979,11 @@ class FileAttachmentField extends FileField
             try {
                 $this->upload->loadIntoFile($tmpFile, $fileObject, $this->getFolderName());
                 $ids[] = $fileObject->ID;
+                /** publish files on upload */
+                foreach ($ids as $id){
+                    $file = File::get()->byID($id);
+                    $file->doPublish();
+                }
             } catch (Exception $e) {
                 $error_message = _t('FileAttachmentField.GENERALUPLOADERROR',
                     'Sorry, the file could not be saved at the current time, please try again later.');
