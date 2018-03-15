@@ -1,5 +1,7 @@
 (function () {
-
+    /**
+     * #Greg: select submit input
+     */
     var uploadbuttonDigitalDruck = document.querySelector('#Form_FileUploadForm_action_handleFileUpload');
     var uploadbuttonProof = document.querySelector('#Form_FileUploadFormProof_action_handleFileUpload');
     /**
@@ -65,6 +67,9 @@
                         if (!_this.settings.uploadMultiple) {
                             _this.removeAttachedFiles();
 
+                            /**
+                             * disable submit, change style on upload
+                             */
                             if (uploadbuttonDigitalDruck !== null) {
                                 uploadbuttonDigitalDruck.setAttribute('style', 'background-color:#f0f0f0;');
                                 uploadbuttonDigitalDruck.setAttribute('disabled', 'disabled');
@@ -105,6 +110,9 @@
                     .on('success', function (file, response) {
                         _this.persistFile(file, response);
 
+                        /**
+                         * enable submit, remove style on success
+                         */
                         if (uploadbuttonDigitalDruck !== null) {
                             uploadbuttonDigitalDruck.removeAttribute("disabled");
                             uploadbuttonDigitalDruck.setAttribute('style', '');
