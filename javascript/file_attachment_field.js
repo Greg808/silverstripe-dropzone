@@ -71,12 +71,12 @@
                              * disable submit, change style on upload
                              */
                             if (uploadbuttonDigitalDruck !== null) {
-                                uploadbuttonDigitalDruck.setAttribute('style', 'background-color:#f0f0f0;');
+                                uploadbuttonDigitalDruck.classList.add('btn-disabled');
                                 uploadbuttonDigitalDruck.setAttribute('disabled', 'disabled');
                             }
 
                             if (uploadbuttonProof !== null) {
-                                uploadbuttonProof.setAttribute('style', 'background-color:#f9e3e3; color:#a03333;');
+                                uploadbuttonProof.classList.add('btn-disabled');
                                 uploadbuttonProof.setAttribute('disabled', 'disabled');
                             }
                         }
@@ -115,12 +115,12 @@
                          */
                         if (uploadbuttonDigitalDruck !== null) {
                             uploadbuttonDigitalDruck.removeAttribute("disabled");
-                            uploadbuttonDigitalDruck.setAttribute('style', '');
+                            uploadbuttonDigitalDruck.classList.remove('btn-disabled');
                         }
 
                         if (uploadbuttonProof !== null) {
                             uploadbuttonProof.removeAttribute("disabled");
-                            uploadbuttonProof.setAttribute('style', '');
+                            uploadbuttonProof.classList.remove('btn-disabled');
                         }
                     })
 
