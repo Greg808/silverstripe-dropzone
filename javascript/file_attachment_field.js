@@ -1,9 +1,5 @@
 (function () {
-    /**
-     * #Greg: select submit input
-     */
-    var uploadbuttonDigitalDruck = document.querySelector('#Form_FileUploadForm_action_handleFileUpload');
-    var uploadbuttonProof = document.querySelector('#Form_FileUploadFormProof_action_handleFileUpload');
+
     /**
      * A wrapper for the Dropzone object that handles UI specifics for
      * its implementation in this module.
@@ -56,28 +52,34 @@
 
     UploadInterface.prototype = {
 
+
         /**
          * Sets up the UI with all the event handlers
          */
         initialize: function () {
+            /**
+             * #Greg: select submit input
+             */
+            var uploadbuttonDigitalDruck = document.querySelector('#Form_FileUploadForm_action_handleFileUpload');
+            var uploadbuttonProof = document.querySelector('#FileUploadFormProof_FileUploadFormProof_action_handleFileUpload');
             var _this = this;
             if (this.backend) {
                 this.backend
+                    .on('uploadprogress', function(file, progress, bytesSent){
+                        if (uploadbuttonProof !== null) {
+                            uploadbuttonProof.classList.add('btn-disabled');
+                            uploadbuttonProof.setAttribute('disabled', 'disabled');
+                        }
+                    })
                     .on('addedfile', function (file) {
                         if (!_this.settings.uploadMultiple) {
                             _this.removeAttachedFiles();
-
                             /**
                              * disable submit, change style on upload
                              */
                             if (uploadbuttonDigitalDruck !== null) {
                                 uploadbuttonDigitalDruck.classList.add('btn-disabled');
                                 uploadbuttonDigitalDruck.setAttribute('disabled', 'disabled');
-                            }
-
-                            if (uploadbuttonProof !== null) {
-                                uploadbuttonProof.classList.add('btn-disabled');
-                                uploadbuttonProof.setAttribute('disabled', 'disabled');
                             }
                         }
                         _this.queueFile(file);
